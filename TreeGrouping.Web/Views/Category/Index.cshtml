@@ -1,0 +1,191 @@
+﻿@{
+    ViewData["Title"] = "Категории";
+}
+
+<div class="container">
+    <a href="#" id="clear-selection">Очистить выбор</a>
+    <div class="row">
+        <!-- Левая колонка (Volna) -->
+        <div class="col-md-4 tree-container">
+            <h4 class="text-center">Volna</h4>
+            <input type="text" id="volna-filter" class="form-control filter-input" placeholder="Фильтр категорий">
+            <div id="volna-category-container" class="tree-scroll">
+                <p>Загрузка...</p>
+            </div>
+        </div>
+
+        <!-- Центральная колонка (Ozon) -->
+        <div class="col-md-4 tree-container">
+            <h4 class="text-center">Ozon</h4>
+            <input type="text" id="ozon-filter" class="form-control filter-input" placeholder="Фильтр категорий">
+            <div id="ozon-category-container" class="tree-scroll">
+                <p>Загрузка...</p>
+            </div>
+        </div>
+
+        <!-- Правая колонка (Ct) -->
+        <div class="col-md-4 tree-container">
+            <h4 class="text-center">Ct</h4>
+            <input type="text" id="ct-filter" class="form-control filter-input" placeholder="Фильтр категорий">
+            <div id="ct-category-container" class="tree-scroll">
+                <p>Загрузка...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery для AJAX -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    // Кнопка очистки выбора
+    document.getElementById("clear-selection").addEventListener("click", function () {
+        sessionStorage.removeItem("selectedCategories");
+        document.querySelectorAll(".category-link").forEach(link => {
+            link.style.color = "";
+        });
+        alert("Выбор категорий очищен!");
+    });
+    
+    function loadCategories(containerId, action, filterValue) {
+        $.get(action, { name: filterValue }, function (data) {
+            $("#" + containerId).html(data);
+        });
+    }
+
+    $(document).ready(function () {
+        // Изначальная загрузка деревьев
+        loadCategories("volna-category-container", '@Url.Action("GetVolnaCategories", "Category")', '');
+        loadCategories("ozon-category-container", '@Url.Action("GetOzonCategories", "Category")', '');
+        loadCategories("ct-category-container", '@Url.Action("GetCtCategories", "Category")', '');
+
+        // Фильтрация при вводе текста
+        $(".filter-input").on("input", function () {
+            let id = $(this).attr("id");
+            let value = $(this).val();
+
+            if (id === "volna-filter") {
+                loadCategories("volna-category-container", '@Url.Action("GetVolnaCategories", "Category")', value);
+            } else if (id === "ozon-filter") {
+                loadCategories("ozon-category-container", '@Url.Action("GetOzonCategories", "Category")', value);
+            } else if (id === "ct-filter") {
+                loadCategories("ct-category-container", '@Url.Action("GetCtCategories", "Category")', value);
+            }
+        });
+    });
+
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let selectedData = JSON.parse(sessionStorage.getItem("selectedCategories")) || {};
+
+        document.querySelectorAll(".category-link").forEach(link => {
+            let id = link.getAttribute("data-id");
+            let tree = link.getAttribute("data-tree");
+
+            if (selectedData[tree] && selectedData[tree] === id) {
+                link.style.color = "red";
+            }
+        });
+    });
+
+    function toggleCategory(event, element) {
+        event.preventDefault();
+        let id = element.getAttribute("data-id");
+        let tree = element.getAttribute("data-tree");
+
+        let selectedData = JSON.parse(sessionStorage.getItem("selectedCategories")) || {};
+
+        // Если уже выбрана категория для данного tree, заменяем на новую
+        if (selectedData[tree] === id) {
+            delete selectedData[tree]; // Удаляем, если кликнули повторно (отмена выбора)
+            element.style.color = "";
+        } else {
+            // Сбрасываем цвет у старого элемента (если он был выделен)
+            document.querySelectorAll(`.category-link[data-tree="${tree}"]`).forEach(link => {
+                link.style.color = "";
+            });
+
+            selectedData[tree] = id; // Добавляем новую категорию
+            element.style.color = "red";
+        }
+
+        sessionStorage.setItem("selectedCategories", JSON.stringify(selectedData));
+        console.log("Выбранные категории:", selectedData);
+
+        // Проверяем, если выбрано ровно 3 категории - показываем окно
+        if (Object.keys(selectedData).length === 3) {
+            showConfirmationDialog(selectedData);
+        }
+    }
+
+    // Функция для показа окна подтверждения
+    function showConfirmationDialog(selectedData) {
+        let message = "Вы выбрали 3 категории. Связать их?";
+        if (confirm(message)) {
+            sendCategoriesToServer(selectedData);
+        }
+    }
+
+    // Функция для отправки данных в контроллер
+    function sendCategoriesToServer(selectedData) {
+        fetch('/Category/LinkCategories', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(selectedData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Ответ сервера:", data);
+                alert("Категории успешно связаны!");
+                sessionStorage.removeItem("selectedCategories"); // Очищаем после отправки
+                location.reload(); // Обновляем страницу
+            })
+            .catch(error => {
+                console.error("Ошибка:", error);
+                alert("Ошибка при связывании категорий.");
+            });
+    }
+</script>
+
+<!-- CSS -->
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden; /* Убираем прокрутку всей страницы */
+    }
+
+    .container {
+        height: 100vh; /* Высота контейнера на весь экран */
+        display: flex;
+        flex-direction: column;
+    }
+
+    .row {
+        flex-grow: 1;
+        display: flex;
+        flex-wrap: wrap; /* Позволяет элементам переноситься */
+        justify-content: space-between;
+    }
+
+    .tree-container {
+        border: 1px solid #ddd;
+        padding: 10px;
+        flex: 1;
+        height: 100vh; /* Высота на весь экран */
+        overflow: hidden;
+        min-width: 300px; /* Минимальная ширина */
+    }
+
+    .tree-scroll {
+        height: calc(100vh - 120px); /* Учитываем высоту заголовка и фильтра */
+        overflow-y: auto; /* Независимая прокрутка */
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+</style>

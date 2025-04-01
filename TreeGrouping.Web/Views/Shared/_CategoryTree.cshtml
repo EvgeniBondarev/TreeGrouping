@@ -1,0 +1,27 @@
+﻿@model Tuple<List<TreeGrouping.Application.DbService.Models.CategoryModel>, string>
+
+@{
+    var categories = Model.Item1; // Список категорий
+    var treeType = Model.Item2;   // Название дерева
+}
+
+<ul>
+    @foreach (var category in categories)
+    {
+        <li>
+            @if (category.Children.Any())
+            {
+                <details>
+                    <summary>@category.Name</summary>
+                    <partial name="_CategoryTree" model="Tuple.Create(category.Children, treeType)" />
+                </details>
+            }
+            else
+            {
+                <a href="#" class="category-link" data-id="@category.Id" data-tree="@treeType" onclick="toggleCategory(event, this)">
+                    @category.Name
+                </a>
+            }
+        </li>
+    }
+</ul>

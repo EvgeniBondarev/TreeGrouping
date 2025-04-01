@@ -1,0 +1,12 @@
+D:\.NETProject\TreeGrouping\TreeGrouping.Application\bin\Debug\net9.0\TreeGrouping.Application.deps.json
+D:\.NETProject\TreeGrouping\TreeGrouping.Application\bin\Debug\net9.0\TreeGrouping.Application.dll
+D:\.NETProject\TreeGrouping\TreeGrouping.Application\bin\Debug\net9.0\TreeGrouping.Application.pdb
+D:\.NETProject\TreeGrouping\TreeGrouping.Application\obj\Debug\net9.0\TreeGrouping.Application.csproj.AssemblyReference.cache
+D:\.NETProject\TreeGrouping\TreeGrouping.Application\obj\Debug\net9.0\TreeGrouping.Application.GeneratedMSBuildEditorConfig.editorconfig
+D:\.NETProject\TreeGrouping\TreeGrouping.Application\obj\Debug\net9.0\TreeGrouping.Application.AssemblyInfoInputs.cache
+D:\.NETProject\TreeGrouping\TreeGrouping.Application\obj\Debug\net9.0\TreeGrouping.Application.AssemblyInfo.cs
+D:\.NETProject\TreeGrouping\TreeGrouping.Application\obj\Debug\net9.0\TreeGrouping.Application.csproj.CoreCompileInputs.cache
+D:\.NETProject\TreeGrouping\TreeGrouping.Application\obj\Debug\net9.0\TreeGrouping.Application.dll
+D:\.NETProject\TreeGrouping\TreeGrouping.Application\obj\Debug\net9.0\refint\TreeGrouping.Application.dll
+D:\.NETProject\TreeGrouping\TreeGrouping.Application\obj\Debug\net9.0\TreeGrouping.Application.pdb
+D:\.NETProject\TreeGrouping\TreeGrouping.Application\obj\Debug\net9.0\ref\TreeGrouping.Application.dll
