@@ -10,3 +10,4 @@ D:\.NETProject\TreeGrouping\TreeGrouping.Application\obj\Debug\net9.0\TreeGroupi
 D:\.NETProject\TreeGrouping\TreeGrouping.Application\obj\Debug\net9.0\refint\TreeGrouping.Application.dll
 D:\.NETProject\TreeGrouping\TreeGrouping.Application\obj\Debug\net9.0\TreeGrouping.Application.pdb
 D:\.NETProject\TreeGrouping\TreeGrouping.Application\obj\Debug\net9.0\ref\TreeGrouping.Application.dll
+D:\.NETProject\TreeGrouping\TreeGrouping.Application\obj\Debug\net9.0\TreeGrouping.Application.sourcelink.json
