@@ -1,8 +1,8 @@
 ﻿@model Tuple<List<TreeGrouping.Application.DbService.Models.CategoryModel>, string>
 
 @{
-    var categories = Model.Item1; // Список категорий
-    var treeType = Model.Item2;   // Название дерева
+    var categories = Model.Item1; 
+    var treeType = Model.Item2;   
 }
 
 <ul>
@@ -12,7 +12,11 @@
             @if (category.Children.Any())
             {
                 <details>
-                    <summary>@category.Name</summary>
+                    <summary>
+                        <a href="#" class="category-link" data-id="@category.Id" data-tree="@treeType" onclick="toggleCategory(event, this)">
+                            @category.Name <strong style="font-size: 0.8em;">@category.ParentName</strong>
+                        </a>
+                    </summary>
                     <partial name="_CategoryTree" model="Tuple.Create(category.Children, treeType)" />
                 </details>
             }

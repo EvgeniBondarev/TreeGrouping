@@ -28,6 +28,19 @@ public class DatabaseService:IDatabaseService
         );
     }
     
+    public IEnumerable<CategoryModel> ExecuteStoredProcedure(StoredProcedureType type, object? parameters = null)
+    {
+        using var connection = new SqlConnection(_connectionString);
+    
+        var procedureName = type.GetProcedureName();
+        var paramDict = type.GetParameter(parameters);
+
+        return connection.Query<CategoryModel>(
+            procedureName, paramDict, commandType: CommandType.StoredProcedure
+        );
+    }
+
+    
     public async Task<IEnumerable<CategoryLinkModel>> GetAllCategoryLinksAsync()
     {
         using var connection = new SqlConnection(_connectionString);

@@ -25,7 +25,8 @@ public class CategoryController : Controller
     }
 
     // Получение категорий с кэшем и фильтрацией
-    private async Task<List<CategoryModel>> GetCategoriesWithCache(string cacheKey, StoredProcedureType storedProcedureType, string name)
+    private async Task<List<CategoryModel>> GetCategoriesWithCache(string cacheKey,
+        StoredProcedureType storedProcedureType, string name)
     {
         if (!_cache.TryGetValue(cacheKey, out List<CategoryModel> categories))
         {
@@ -65,7 +66,6 @@ public class CategoryController : Controller
                 allRelevantCategories.Add(parent);
             }
 
-            // Обновляем список родительских ID, чтобы подниматься по иерархии
             parentIds = new HashSet<int?>(newParents.Select(c => c.ParentId));
         }
 
@@ -83,7 +83,7 @@ public class CategoryController : Controller
 
         return PartialView("_CategoryTree", model);
     }
-    
+
     [HttpGet]
     public async Task<IActionResult> GetVolnaCategoriesById(int id)
     {
@@ -104,7 +104,7 @@ public class CategoryController : Controller
 
         return PartialView("_CategoryTree", model);
     }
-    
+
     [HttpGet]
     public async Task<IActionResult> GetOzonCategoriesById(int id)
     {
@@ -120,11 +120,17 @@ public class CategoryController : Controller
     public async Task<IActionResult> GetCtCategories(string name = null)
     {
         var categories = await GetCategoriesWithCache("ct_categories", StoredProcedureType.GetCtCategories, name);
-        var tree = BuildTree(categories);
+        var newCategories = categories.ToList();
+        var links = await _dbService.GetAllCategoryLinksAsync();
+        var categoryLinkToModels = await CategoryLinkToModel(links.ToList()); 
+        newCategories.AddRange(categoryLinkToModels);
+        var tree = BuildTree(newCategories);
         var model = Tuple.Create(tree, "CT");
 
         return PartialView("_CategoryTree", model);
     }
+
+
     [HttpGet]
     public async Task<IActionResult> GetCtCategoriesById(int id)
     {
@@ -134,30 +140,67 @@ public class CategoryController : Controller
 
         return PartialView("_CategoryTree", model);
     }
-    
-    [HttpPost]
-    public async Task<IActionResult> LinkCategories([FromBody] Dictionary<string, string> selectedCategories)
-    {
-        if (selectedCategories == null || selectedCategories.Count != 3)
-        {
-            return BadRequest(new { message = "Нужно выбрать ровно 3 категории!" });
-        }
 
+    [HttpPost]
+    public async Task<IActionResult> LinkCategories([FromBody] Dictionary<string, int> selectedCategories)
+    {
         try
         {
-            int volnaCategoryId = int.Parse(selectedCategories.GetValueOrDefault("Volna", "0"));
-            long ozonCategoryId = long.Parse(selectedCategories.GetValueOrDefault("Ozon", "0"));
-            int ctCategoryId = int.Parse(selectedCategories.GetValueOrDefault("CT", "0"));
-            var categories = await _dbService.ExecuteStoredProcedureAsync(
-                StoredProcedureType.AddCategoryLink,
-                (volnaCategoryId, ozonCategoryId, ctCategoryId)
-            );
+            // Проверка, что словарь не пустой и содержит ключ "CT"
+            if (selectedCategories == null || selectedCategories.Count <= 1 || !selectedCategories.ContainsKey("CT"))
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Ошибка: Должен быть выбран элемент с ключом 'CT' и должно быть более одной категории."
+                });
+            }
 
-            return Json(new { success = true, message = "Категории успешно связаны!" });
+            // Извлекаем значение для CT
+            var ctValue = selectedCategories["CT"];
+
+            // Создаем список для хранения новых словарей
+            var categoryPairs = new List<Dictionary<string, int>>();
+
+            // Перебираем все ключи в словаре, кроме "CT"
+            foreach (var key in selectedCategories.Keys.Where(k => k != "CT"))
+            {
+                // Создаем новый словарь с ключами "CT" и текущим элементом
+                var pair = new Dictionary<string, int>
+                {
+                    { "CT", ctValue },
+                    { key, selectedCategories[key] }
+                };
+
+                // Добавляем пару в список
+                categoryPairs.Add(pair);
+            }
+
+            // Проходим по списку категорий и выполняем запросы для каждой пары
+            foreach (var pair in categoryPairs)
+            {
+                // Получаем значение для ключа "CT"
+                int ct = pair.ContainsKey("CT") ? pair["CT"] : 0;
+
+                // Получаем второй элемент, который не является "CT"
+                var secondKey = pair.Keys.FirstOrDefault(k => k != "CT");
+                var secondValue = secondKey != null ? pair[secondKey] : 0;
+
+                // Выполняем хранимую процедуру для каждой пары
+                await _dbService.ExecuteStoredProcedureAsync(
+                    StoredProcedureType.AddCategoryLink,
+                    (ct, secondValue, secondKey)
+                );
+            }
+
+            // Возвращаем положительный ответ
+            return Ok(new { success = true, message = "Категории успешно связаны!", data = categoryPairs });
         }
         catch (Exception ex)
         {
-            return BadRequest(new { success = false, message = "Ошибка при связывании категорий!", error = ex.Message });
+            // Возвращаем ошибку, если что-то пошло не так
+            return BadRequest(new
+                { success = false, message = "Ошибка при связывании категорий!", error = ex.Message });
         }
     }
 
@@ -172,9 +215,37 @@ public class CategoryController : Controller
                     Id = c.Id,
                     ParentId = c.ParentId,
                     Name = c.Name,
-                    Children = BuildBranch(c.Id)
+                    ParentName = c.ParentName,
+                    Children = c.Children.Any() ? c.Children : BuildBranch(c.Id)
                 }).ToList();
 
         return BuildBranch(null).Concat(BuildBranch(0)).ToList();
+    }
+
+
+    private async Task<List<CategoryModel>> CategoryLinkToModel(List<CategoryLinkModel> links)
+    {
+        var tasks = links.Select(async link =>
+        {
+            if (!Enum.TryParse<CategoryLinkType>(link.LinkTypeName, true, out var linkType))
+            {
+                return Enumerable.Empty<CategoryModel>();
+            }
+
+            var linkTreeTask = await _dbService.ExecuteStoredProcedureAsync(linkType.GetProcedureType(), link.LinkCategoryId);
+            var linkTree = BuildTree(linkTreeTask.ToList());
+
+            if (linkTree.Any())
+            {
+                var first = linkTree.First();
+                first.ParentId = link.CtCategoryId;
+                first.ParentName = link.LinkTypeName;
+            }
+
+            return linkTree;
+        });
+
+        var combinedLinkTrees = (await Task.WhenAll(tasks)).SelectMany(t => t).ToList();
+        return combinedLinkTrees;
     }
 }

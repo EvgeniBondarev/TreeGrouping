@@ -12,12 +12,6 @@
 </head>
 <body>
 <header>
-    <nav>
-        <ul>
-            <li><a href="@Url.Action("Index", "Category")">Связать категории</a></li>
-            <li><a href="@Url.Action("CategoryLinks", "CategoryLinks")">Связанные категории</a></li>
-        </ul>
-    </nav>
 </header>
 <div class="container">
     <main role="main" class="pb-3">
@@ -51,6 +45,51 @@
 
     nav a:hover {
         text-decoration: underline;
+    }
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden; /* Убираем прокрутку всей страницы */
+    }
+
+    .container {
+        height: 100vh; /* Высота контейнера на весь экран */
+        display: flex;
+        flex-direction: column;
+    }
+
+    .row {
+        flex-grow: 1;
+        display: flex;
+        flex-wrap: wrap; /* Позволяет элементам переноситься */
+        justify-content: space-between;
+    }
+
+    .tree-container {
+        border: 1px solid #ddd;
+        padding: 10px;
+        flex: 1;
+        height: 100vh; /* Высота на весь экран */
+        overflow: hidden;
+        min-width: 300px; /* Минимальная ширина */
+    }
+
+    .tree-scroll {
+        height: calc(100vh - 120px); /* Учитываем высоту заголовка и фильтра */
+        overflow-y: auto; /* Независимая прокрутка */
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+
+    a {
+        color: black; /* Чёрный цвет текста */
+        text-decoration: none; /* Убираем подчёркивание */
+    }
+
+    a:hover, a:focus, a:active {
+        color: black; /* Чёрный цвет при наведении и фокусе */
+        text-decoration: none; /* Убираем подчёркивание */
     }
 </style>
 

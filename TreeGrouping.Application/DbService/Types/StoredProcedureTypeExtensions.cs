@@ -48,11 +48,11 @@ public static class StoredProcedureTypeExtensions
                     break;
                 
                 case StoredProcedureType.AddCategoryLink:
-                    if (parameter is (int volnaCategoryId, long ozonCategoryId, int ctCategoryId))
+                    if (parameter is (int ctCategoryId, int linkCategoryId, string linkTypeName))
                     {
-                        paramDict["volna_category_id"] = volnaCategoryId;
-                        paramDict["ozon_category_id"] = ozonCategoryId;
                         paramDict["ct_category_id"] = ctCategoryId;
+                        paramDict["link_category_id"] = linkCategoryId;
+                        paramDict["link_type_name"] = linkTypeName;
                     }
                     break;
                 case StoredProcedureType.DeleteCategoryLink: 

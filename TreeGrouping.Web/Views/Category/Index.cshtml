@@ -4,7 +4,17 @@
 
 <div class="container">
     <a href="#" id="clear-selection">Очистить выбор</a>
+    <button id="confirmLinkButton" style="display: none;" onclick="sendCategoriesToServer()">Связать категории</button>
     <div class="row">
+        <!-- Правая колонка (Ct) -->
+        <div class="col-md-4 tree-container">
+            <h4 class="text-center">Ct</h4>
+            <input type="text" id="ct-filter" class="form-control filter-input" placeholder="Фильтр категорий">
+            <div id="ct-category-container" class="tree-scroll">
+                <p>Загрузка...</p>
+            </div>
+        </div>
+        
         <!-- Левая колонка (Volna) -->
         <div class="col-md-4 tree-container">
             <h4 class="text-center">Volna</h4>
@@ -23,14 +33,7 @@
             </div>
         </div>
 
-        <!-- Правая колонка (Ct) -->
-        <div class="col-md-4 tree-container">
-            <h4 class="text-center">Ct</h4>
-            <input type="text" id="ct-filter" class="form-control filter-input" placeholder="Фильтр категорий">
-            <div id="ct-category-container" class="tree-scroll">
-                <p>Загрузка...</p>
-            </div>
-        </div>
+
     </div>
 </div>
 
@@ -115,21 +118,27 @@
         console.log("Выбранные категории:", selectedData);
 
         // Проверяем, если выбрано ровно 3 категории - показываем окно
-        if (Object.keys(selectedData).length === 3) {
+        if (Object.keys(selectedData).length > 1) {
             showConfirmationDialog(selectedData);
         }
+        console.log(sessionStorage.getItem("selectedCategories"));
     }
 
     // Функция для показа окна подтверждения
     function showConfirmationDialog(selectedData) {
-        let message = "Вы выбрали 3 категории. Связать их?";
-        if (confirm(message)) {
-            sendCategoriesToServer(selectedData);
+        let button = document.getElementById("confirmLinkButton");
+
+        // Проверка наличия элемента с ключом 'CT' в selectedData
+        if ("CT" in selectedData) {
+            button.style.display = "block"; // Показываем кнопку
+        } else {
+            button.style.display = "none"; // Скрываем кнопку
         }
     }
 
     // Функция для отправки данных в контроллер
-    function sendCategoriesToServer(selectedData) {
+    function sendCategoriesToServer() {
+        let selectedData = JSON.parse(sessionStorage.getItem("selectedCategories")) || {};
         fetch('/Category/LinkCategories', {
             method: 'POST',
             headers: {
@@ -150,42 +159,3 @@
             });
     }
 </script>
-
-<!-- CSS -->
-<style>
-    html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-        overflow: hidden; /* Убираем прокрутку всей страницы */
-    }
-
-    .container {
-        height: 100vh; /* Высота контейнера на весь экран */
-        display: flex;
-        flex-direction: column;
-    }
-
-    .row {
-        flex-grow: 1;
-        display: flex;
-        flex-wrap: wrap; /* Позволяет элементам переноситься */
-        justify-content: space-between;
-    }
-
-    .tree-container {
-        border: 1px solid #ddd;
-        padding: 10px;
-        flex: 1;
-        height: 100vh; /* Высота на весь экран */
-        overflow: hidden;
-        min-width: 300px; /* Минимальная ширина */
-    }
-
-    .tree-scroll {
-        height: calc(100vh - 120px); /* Учитываем высоту заголовка и фильтра */
-        overflow-y: auto; /* Независимая прокрутка */
-        border: 1px solid #ccc;
-        padding: 10px;
-    }
-</style>

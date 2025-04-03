@@ -10,4 +10,8 @@
       <ProjectReference Include="..\TreeGrouping.Application\TreeGrouping.Application.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Views\CategoryLinks\CategoryLinks.cshtml" />
+    </ItemGroup>
+
 </Project>
