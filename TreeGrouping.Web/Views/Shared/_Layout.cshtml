@@ -112,6 +112,128 @@
     .tree-container.draggable {
         cursor: move;
     }
+    /* Стили для модального окна */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.4);
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 300px;
+        border-radius: 5px;
+    }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .close:hover {
+        color: black;
+    }
+
+    .settings-options {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .action-panel {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    .action-panel {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
+        padding: 8px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .action-link {
+        color: #007bff;
+        text-decoration: none;
+        padding: 6px 12px;
+        border-radius: 4px;
+        transition: all 0.2s;
+    }
+
+    .action-link:hover {
+        background-color: #f8f9fa;
+        text-decoration: underline;
+    }
+
+    .action-button {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .action-button:hover {
+        background-color: #218838;
+    }
+
+    #confirmLinkButton {
+        display: none;
+    }    .action-panel {
+             display: flex;
+             align-items: center;
+             gap: 15px;
+             margin-bottom: 15px;
+             padding: 8px 0;
+             border-bottom: 1px solid #eee;
+         }
+
+    .action-link {
+        color: #007bff;
+        text-decoration: none;
+        padding: 6px 12px;
+        border-radius: 4px;
+        transition: all 0.2s;
+    }
+
+    .action-link:hover {
+        background-color: #f8f9fa;
+        text-decoration: underline;
+    }
+
+    .action-button {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .action-button:hover {
+        background-color: #218838;
+    }
+
+    #confirmLinkButton {
+        display: none;
+    }
 </style>
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
