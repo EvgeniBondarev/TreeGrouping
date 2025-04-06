@@ -17,10 +17,11 @@ public static class StoredProcedureTypeExtensions
             StoredProcedureType.SearchCtCategoryById => "SearchCtCategoryById",
             StoredProcedureType.AddCategoryLink => "AddCategoryLink",
             StoredProcedureType.DeleteCategoryLink => "DeleteCategoryLinkById",
+            StoredProcedureType.GetCatTreeCategories => "GetCatTreeCategories",  
+            StoredProcedureType.SearchCatTreeCategoryById => "SearchCatTreeCategoryById",
             _ => throw new ArgumentException("Unknown procedure type")
         };
     }
-
     public static Dictionary<string, object> GetParameter(this StoredProcedureType type, object parameter)
     {
         var paramDict = new Dictionary<string, object>();
@@ -59,6 +60,12 @@ public static class StoredProcedureTypeExtensions
                     if (parameter is int categoryLinkId)
                     {
                         paramDict["CategoryLinkId"] = categoryLinkId;
+                    }
+                    break;
+                case StoredProcedureType.SearchCatTreeCategoryById:
+                    if (parameter is int catTreeId)
+                    {
+                        paramDict["categoryId"] = catTreeId;
                     }
                     break;
             }

@@ -3,20 +3,26 @@
 }
 
 <div class="container">
+    <!-- Кнопки для скрытия/показа колонок -->
+    <div class="row">
+        <button onclick="toggleColumn('volna-column')">Скрыть/показать Volna</button>
+        <button onclick="toggleColumn('ozon-column')">Скрыть/показать Ozon</button>
+        <button onclick="toggleColumn('cattree-column')">Скрыть/показать CatTree</button>
+    </div>
     <a href="#" id="clear-selection">Очистить выбор</a>
     <button id="confirmLinkButton" style="display: none;" onclick="sendCategoriesToServer()">Связать категории</button>
-    <div class="row">
+    <div class="row" id="columns-container">
         <!-- Правая колонка (Ct) -->
-        <div class="col-md-4 tree-container">
-            <h4 class="text-center">Ct</h4>
+        <div class="col-md-4 tree-container main-column" id="ct-column">
+            <h4 class="text-center">Ct (Главная)</h4>
             <input type="text" id="ct-filter" class="form-control filter-input" placeholder="Фильтр категорий">
             <div id="ct-category-container" class="tree-scroll">
                 <p>Загрузка...</p>
             </div>
         </div>
-        
+
         <!-- Левая колонка (Volna) -->
-        <div class="col-md-4 tree-container">
+        <div class="col-md-4 tree-container" id="volna-column">
             <h4 class="text-center">Volna</h4>
             <input type="text" id="volna-filter" class="form-control filter-input" placeholder="Фильтр категорий">
             <div id="volna-category-container" class="tree-scroll">
@@ -25,7 +31,7 @@
         </div>
 
         <!-- Центральная колонка (Ozon) -->
-        <div class="col-md-4 tree-container">
+        <div class="col-md-4 tree-container" id="ozon-column">
             <h4 class="text-center">Ozon</h4>
             <input type="text" id="ozon-filter" class="form-control filter-input" placeholder="Фильтр категорий">
             <div id="ozon-category-container" class="tree-scroll">
@@ -33,12 +39,95 @@
             </div>
         </div>
 
-
+        <div class="col-md-4 tree-container" id="cattree-column">
+            <h4 class="text-center">CatTree</h4>
+            <input type="text" id="cattree-filter" class="form-control filter-input" placeholder="Фильтр категорий">
+            <div id="cattree-category-container" class="tree-scroll">
+                <p>Загрузка...</p>
+            </div>
+        </div>
     </div>
 </div>
 
+
 <!-- jQuery для AJAX -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    // Функция для скрытия/показа колонок
+    function toggleColumn(columnId) {
+        var column = document.getElementById(columnId);
+        column.classList.toggle('hidden');
+        saveColumnsState();
+    }
+
+    // Функция для перемещения колонок
+    function makeColumnsDraggable() {
+        const columns = document.querySelectorAll('.tree-container');
+
+        columns.forEach(function(column) {
+            column.setAttribute('draggable', true);
+
+            column.addEventListener('dragstart', function(e) {
+                e.dataTransfer.setData('text', column.id);
+            });
+
+            column.addEventListener('dragover', function(e) {
+                e.preventDefault();
+            });
+
+            column.addEventListener('drop', function(e) {
+                e.preventDefault();
+                var draggedColumnId = e.dataTransfer.getData('text');
+                var draggedColumn = document.getElementById(draggedColumnId);
+                var currentColumn = column;
+
+                // Перемещаем столбцы
+                if (draggedColumn !== currentColumn) {
+                    var parent = draggedColumn.parentNode;
+                    parent.insertBefore(draggedColumn, currentColumn);
+                    saveColumnsState();
+                }
+            });
+        });
+    }
+
+    // Сохранение состояния колонок в sessionStorage
+    function saveColumnsState() {
+        const columnsState = {
+            volnaColumnHidden: document.getElementById('volna-column').classList.contains('hidden'),
+            ozonColumnHidden: document.getElementById('ozon-column').classList.contains('hidden'),
+            cattreeColumnHidden: document.getElementById('cattree-column').classList.contains('hidden'),
+            columnsOrder: Array.from(document.getElementById('columns-container').children).map(col => col.id)
+        };
+
+        sessionStorage.setItem('columnsState', JSON.stringify(columnsState));
+    }
+
+    // Восстановление состояния колонок из sessionStorage
+    function restoreColumnsState() {
+        const columnsState = JSON.parse(sessionStorage.getItem('columnsState'));
+        if (columnsState) {
+            // Восстанавливаем видимость колонок
+            if (columnsState.volnaColumnHidden) document.getElementById('volna-column').classList.add('hidden');
+            if (columnsState.ozonColumnHidden) document.getElementById('ozon-column').classList.add('hidden');
+            if (columnsState.cattreeColumnHidden) document.getElementById('cattree-column').classList.add('hidden');
+
+            // Восстанавливаем порядок колонок
+            const container = document.getElementById('columns-container');
+            columnsState.columnsOrder.forEach(columnId => {
+                const column = document.getElementById(columnId);
+                container.appendChild(column);
+            });
+        }
+    }
+
+    // Инициализация перемещения колонок и восстановления состояния при загрузке страницы
+    window.onload = function() {
+        makeColumnsDraggable();
+        restoreColumnsState();
+    };
+</script>
 
 <script>
     // Кнопка очистки выбора
@@ -61,6 +150,7 @@
         loadCategories("volna-category-container", '@Url.Action("GetVolnaCategories", "Category")', '');
         loadCategories("ozon-category-container", '@Url.Action("GetOzonCategories", "Category")', '');
         loadCategories("ct-category-container", '@Url.Action("GetCtCategories", "Category")', '');
+        loadCategories("cattree-category-container", '@Url.Action("GetCatTreeCategories", "Category")', '');
 
         // Фильтрация при вводе текста
         $(".filter-input").on("input", function () {
@@ -73,6 +163,8 @@
                 loadCategories("ozon-category-container", '@Url.Action("GetOzonCategories", "Category")', value);
             } else if (id === "ct-filter") {
                 loadCategories("ct-category-container", '@Url.Action("GetCtCategories", "Category")', value);
+            } else if (id === "cattree-filter") {  // Обработчик фильтра для нового дерева
+                loadCategories("cattree-category-container", '@Url.Action("GetCatTreeCategories", "Category")', value);
             }
         });
     });
@@ -104,6 +196,11 @@
         if (selectedData[tree] === id) {
             delete selectedData[tree]; // Удаляем, если кликнули повторно (отмена выбора)
             element.style.color = "";
+            // Проверяем, если выбрано ровно 3 категории - показываем окно
+            if (Object.keys(selectedData).length < 2) {
+                let button = document.getElementById("confirmLinkButton");
+                button.style.display = "none"; // Скрываем кнопку
+            }
         } else {
             // Сбрасываем цвет у старого элемента (если он был выделен)
             document.querySelectorAll(`.category-link[data-tree="${tree}"]`).forEach(link => {

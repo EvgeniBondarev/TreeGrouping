@@ -12,4 +12,10 @@
       <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="Microsoft.Extensions.Caching.Abstractions">
+        <HintPath>C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\9.0.0\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>

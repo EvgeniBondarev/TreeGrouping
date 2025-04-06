@@ -50,7 +50,8 @@
         height: 100%;
         margin: 0;
         padding: 0;
-        overflow: hidden; /* Убираем прокрутку всей страницы */
+        overflow: hidden; 
+        
     }
 
     .container {
@@ -73,6 +74,7 @@
         height: 100vh; /* Высота на весь экран */
         overflow: hidden;
         min-width: 300px; /* Минимальная ширина */
+        box-shadow: 0 0 5px rgba(0,0,0,0.1);
     }
 
     .tree-scroll {
@@ -90,6 +92,25 @@
     a:hover, a:focus, a:active {
         color: black; /* Чёрный цвет при наведении и фокусе */
         text-decoration: none; /* Убираем подчёркивание */
+    }
+    .main-column {
+        background-color: #f0f0f0; /* светло-серый фон */
+        border: 2px solid #ccc;
+        
+        padding: 10px;
+    }
+    /* Плавное скрытие и отображение колонок */
+    .tree-container {
+        transition: all 0.5s ease;
+    }
+
+    .tree-container.hidden {
+        display: none;
+    }
+
+    /* Чтобы остальные колонки можно было двигать */
+    .tree-container.draggable {
+        cursor: move;
     }
 </style>
 

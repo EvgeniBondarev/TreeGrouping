@@ -10,7 +10,8 @@
         "dependencies": {
           "Dapper": "2.1.66",
           "Microsoft.Extensions.Configuration": "10.0.0-preview.2.25163.2",
-          "System.Data.SqlClient": "4.9.0"
+          "System.Data.SqlClient": "4.9.0",
+          "Microsoft.Extensions.Caching.Abstractions": "9.0.0.0"
         },
         "runtime": {
           "TreeGrouping.Application.dll": {}
@@ -113,6 +114,14 @@
             "fileVersion": "4.900.24.56208"
           }
         }
+      },
+      "Microsoft.Extensions.Caching.Abstractions/9.0.0.0": {
+        "runtime": {
+          "Microsoft.Extensions.Caching.Abstractions.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.24.52809"
+          }
+        }
       }
     }
   },
@@ -184,6 +193,11 @@
       "sha512": "sha512-j4KJO+vC62NyUtNHz854njEqXbT8OmAa5jb1nrGfYWBOcggyYUQE0w/snXeaCjdvkSKWuUD+hfvlbN8pTrJTXg==",
       "path": "system.data.sqlclient/4.9.0",
       "hashPath": "system.data.sqlclient.4.9.0.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Caching.Abstractions/9.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }

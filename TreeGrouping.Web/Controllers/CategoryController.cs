@@ -164,6 +164,17 @@ public class CategoryController : Controller
 
         return PartialView("_CategoryTree", model);
     }
+    
+    // Метод для получения CatTree категорий
+    [HttpGet]
+    public async Task<IActionResult> GetCatTreeCategories(string name = null)
+    {
+      
+        var categories = await GetCategoriesWithCache("cat_tree_categories", StoredProcedureType.GetCatTreeCategories, name);
+        var tree = BuildTree(categories);
+        var model = Tuple.Create(tree, "CatTree");
+        return PartialView("_CategoryTree", model);
+    }
 
     [HttpPost]
     public async Task<IActionResult> LinkCategories([FromBody] Dictionary<string, int> selectedCategories)

@@ -1,9 +1,14 @@
+using TreeGrouping.Application.CategoryService;
+using TreeGrouping.Application.CategoryService.CacheHelper;
 using TreeGrouping.Application.DbService;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IDatabaseService, DatabaseService>();
+
+builder.Services.AddScoped<ICategoryCacheHelper, CategoryCacheHelper>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 var app = builder.Build();
 

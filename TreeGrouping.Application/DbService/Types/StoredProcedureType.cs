@@ -12,5 +12,7 @@ public enum StoredProcedureType
     SearchOzonCategoryById,
     SearchCtCategoryById,
     AddCategoryLink,
-    DeleteCategoryLink 
+    DeleteCategoryLink,
+    GetCatTreeCategories,
+    SearchCatTreeCategoryById
 }

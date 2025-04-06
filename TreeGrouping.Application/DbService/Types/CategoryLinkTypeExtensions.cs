@@ -8,6 +8,7 @@ public static class CategoryLinkTypeExtensions
         {
             CategoryLinkType.Ozon => StoredProcedureType.SearchOzonCategoryById,
             CategoryLinkType.Volna => StoredProcedureType.SearchVolnaCategoryById,
+            CategoryLinkType.CatTree => StoredProcedureType.SearchCatTreeCategoryById,
             _ => throw new ArgumentException("Unknown category link type")
         };
     }

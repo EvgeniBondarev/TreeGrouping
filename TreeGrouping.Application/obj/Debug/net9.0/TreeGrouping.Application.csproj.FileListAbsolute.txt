@@ -11,3 +11,5 @@ D:\.NETProject\TreeGrouping\TreeGrouping.Application\obj\Debug\net9.0\refint\Tre
 D:\.NETProject\TreeGrouping\TreeGrouping.Application\obj\Debug\net9.0\TreeGrouping.Application.pdb
 D:\.NETProject\TreeGrouping\TreeGrouping.Application\obj\Debug\net9.0\ref\TreeGrouping.Application.dll
 D:\.NETProject\TreeGrouping\TreeGrouping.Application\obj\Debug\net9.0\TreeGrouping.Application.sourcelink.json
+D:\.NETProject\TreeGrouping\TreeGrouping.Application\bin\Debug\net9.0\Microsoft.Extensions.Caching.Abstractions.dll
+D:\.NETProject\TreeGrouping\TreeGrouping.Application\obj\Debug\net9.0\TreeGrou.2E6311B0.Up2Date
