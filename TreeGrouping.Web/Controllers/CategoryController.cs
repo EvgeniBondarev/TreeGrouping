@@ -24,9 +24,8 @@ public class CategoryController : Controller
         return View();
     }
 
-    // Получение категорий с кэшем и фильтрацией
-    private async Task<List<CategoryModel>> GetCategoriesWithCache(string cacheKey,
-        StoredProcedureType storedProcedureType, string name)
+    /// Метод для получения категорий из кэша или БД
+    private async Task<List<CategoryModel>> GetCategoriesFromCache(string cacheKey, StoredProcedureType storedProcedureType)
     {
         if (!_cache.TryGetValue(cacheKey, out List<CategoryModel> categories))
         {
@@ -34,10 +33,19 @@ public class CategoryController : Controller
             categories = (await _dbService.ExecuteStoredProcedureAsync(storedProcedureType)).ToList();
             _cache.Set(cacheKey, categories, _cacheDuration);
         }
-
+        return categories;
+    }
+    
+    // Метод для фильтрации категорий по названию и родителям
+    private List<CategoryModel> FilterCategoriesByName(List<CategoryModel> categories, string name)
+    {
         // Если фильтр не задан — возвращаем все категории
         if (string.IsNullOrEmpty(name))
         {
+            foreach (var category in categories)
+            {
+                category.IsFiltred = false;
+            }
             return categories;
         }
 
@@ -69,7 +77,22 @@ public class CategoryController : Controller
             parentIds = new HashSet<int?>(newParents.Select(c => c.ParentId));
         }
 
+        foreach (var category in allRelevantCategories)
+        {
+            category.IsFiltred = true;
+        }
+
         return allRelevantCategories.ToList();
+    }
+
+    // Получение категорий с кэшем и фильтрацией
+    private async Task<List<CategoryModel>> GetCategoriesWithCache(string cacheKey, StoredProcedureType storedProcedureType, string name)
+    {
+        // 1. Получаем категории из кэша или БД
+        var categories = await GetCategoriesFromCache(cacheKey, storedProcedureType);
+
+        // 2. Фильтруем категории, если необходимо
+        return FilterCategoriesByName(categories, name);
     }
 
 
@@ -119,11 +142,12 @@ public class CategoryController : Controller
     [HttpGet]
     public async Task<IActionResult> GetCtCategories(string name = null)
     {
-        var categories = await GetCategoriesWithCache("ct_categories", StoredProcedureType.GetCtCategories, name);
+        var categories = await GetCategoriesFromCache("ct_categories", StoredProcedureType.GetCtCategories);
         var newCategories = categories.ToList();
         var links = await _dbService.GetAllCategoryLinksAsync();
         var categoryLinkToModels = await CategoryLinkToModel(links.ToList()); 
         newCategories.AddRange(categoryLinkToModels);
+        newCategories = FilterCategoriesByName(newCategories, name);
         var tree = BuildTree(newCategories);
         var model = Tuple.Create(tree, "CT");
 
@@ -216,7 +240,8 @@ public class CategoryController : Controller
                     ParentId = c.ParentId,
                     Name = c.Name,
                     ParentName = c.ParentName,
-                    Children = c.Children.Any() ? c.Children : BuildBranch(c.Id)
+                    Children = c.Children.Any() ? c.Children : BuildBranch(c.Id),
+                    IsFiltred = c.IsFiltred,
                 }).ToList();
 
         return BuildBranch(null).Concat(BuildBranch(0)).ToList();

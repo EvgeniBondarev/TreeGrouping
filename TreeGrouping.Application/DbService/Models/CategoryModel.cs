@@ -9,4 +9,5 @@ public class CategoryModel
     public string Name { get; set; }
     public List<CategoryModel> Children { get; set; } = new();
     public string? ParentName { get; set; }
+    public bool IsFiltred { get; set; } = false;
 }
