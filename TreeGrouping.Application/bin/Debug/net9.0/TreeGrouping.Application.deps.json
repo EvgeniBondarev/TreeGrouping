@@ -9,9 +9,9 @@
       "TreeGrouping.Application/1.0.0": {
         "dependencies": {
           "Dapper": "2.1.66",
+          "Microsoft.Extensions.Caching.Abstractions": "10.0.0-preview.2.25163.2",
           "Microsoft.Extensions.Configuration": "10.0.0-preview.2.25163.2",
-          "System.Data.SqlClient": "4.9.0",
-          "Microsoft.Extensions.Caching.Abstractions": "9.0.0.0"
+          "System.Data.SqlClient": "4.9.0"
         },
         "runtime": {
           "TreeGrouping.Application.dll": {}
@@ -22,6 +22,17 @@
           "lib/net8.0/Dapper.dll": {
             "assemblyVersion": "2.0.0.0",
             "fileVersion": "2.1.66.48463"
+          }
+        }
+      },
+      "Microsoft.Extensions.Caching.Abstractions/10.0.0-preview.2.25163.2": {
+        "dependencies": {
+          "Microsoft.Extensions.Primitives": "10.0.0-preview.2.25163.2"
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.Extensions.Caching.Abstractions.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.16302"
           }
         }
       },
@@ -114,14 +125,6 @@
             "fileVersion": "4.900.24.56208"
           }
         }
-      },
-      "Microsoft.Extensions.Caching.Abstractions/9.0.0.0": {
-        "runtime": {
-          "Microsoft.Extensions.Caching.Abstractions.dll": {
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.24.52809"
-          }
-        }
       }
     }
   },
@@ -137,6 +140,13 @@
       "sha512": "sha512-/q77jUgDOS+bzkmk3Vy9SiWMaetTw+NOoPAV0xPBsGVAyljd5S6P+4RUW7R3ZUGGr9lDRyPKgAMj2UAOwvqZYw==",
       "path": "dapper/2.1.66",
       "hashPath": "dapper.2.1.66.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Caching.Abstractions/10.0.0-preview.2.25163.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-w7fe95lmqVfx0Ywx91A2wBhTHsf9PTrK0Sbf+jR1tqQ/oDv3x5xSEXG1J1stuxMuWEvhds/829cJidAaoDCv3g==",
+      "path": "microsoft.extensions.caching.abstractions/10.0.0-preview.2.25163.2",
+      "hashPath": "microsoft.extensions.caching.abstractions.10.0.0-preview.2.25163.2.nupkg.sha512"
     },
     "Microsoft.Extensions.Configuration/10.0.0-preview.2.25163.2": {
       "type": "package",
@@ -193,11 +203,6 @@
       "sha512": "sha512-j4KJO+vC62NyUtNHz854njEqXbT8OmAa5jb1nrGfYWBOcggyYUQE0w/snXeaCjdvkSKWuUD+hfvlbN8pTrJTXg==",
       "path": "system.data.sqlclient/4.9.0",
       "hashPath": "system.data.sqlclient.4.9.0.nupkg.sha512"
-    },
-    "Microsoft.Extensions.Caching.Abstractions/9.0.0.0": {
-      "type": "reference",
-      "serviceable": false,
-      "sha512": ""
     }
   }
 }

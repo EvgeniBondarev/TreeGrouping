@@ -20,6 +20,7 @@ public class CategoryTreeService
                     ParentName = c.ParentName,
                     Children = c.Children.Any() ? c.Children : BuildBranch(c.Id),
                     IsFiltred = c.IsFiltred,
+                    LinkId = c.LinkId,
                 }).ToList();
 
         return BuildBranch(null).Concat(BuildBranch(0)).ToList();
@@ -35,7 +36,13 @@ public class CategoryTreeService
                 return Enumerable.Empty<CategoryModel>();
             }
 
+            if (link.LinkTypeName == "IC")
+            {
+                
+            }
+
             var linkTreeTask = await dbService.ExecuteStoredProcedureAsync(linkType.GetProcedureType(), link.LinkCategoryId);
+            
             var linkTree = BuildTree(linkTreeTask.ToList());
 
             if (linkTree.Any())
@@ -43,6 +50,7 @@ public class CategoryTreeService
                 var first = linkTree.First();
                 first.ParentId = link.CtCategoryId;
                 first.ParentName = link.LinkTypeName;
+                first.LinkId = link.Id;
             }
 
             return linkTree;

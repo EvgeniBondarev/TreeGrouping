@@ -15,6 +15,25 @@
           }
         }
       },
+      "Microsoft.Extensions.Caching.Abstractions/10.0.0-preview.2.25163.2": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.Primitives": "10.0.0-preview.2.25163.2"
+        },
+        "compile": {
+          "lib/net9.0/Microsoft.Extensions.Caching.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.Extensions.Caching.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0/_._": {}
+        }
+      },
       "Microsoft.Extensions.Configuration/10.0.0-preview.2.25163.2": {
         "type": "package",
         "dependencies": {
@@ -154,6 +173,36 @@
         "lib/netstandard2.0/Dapper.dll",
         "lib/netstandard2.0/Dapper.xml",
         "readme.md"
+      ]
+    },
+    "Microsoft.Extensions.Caching.Abstractions/10.0.0-preview.2.25163.2": {
+      "sha512": "w7fe95lmqVfx0Ywx91A2wBhTHsf9PTrK0Sbf+jR1tqQ/oDv3x5xSEXG1J1stuxMuWEvhds/829cJidAaoDCv3g==",
+      "type": "package",
+      "path": "microsoft.extensions.caching.abstractions/10.0.0-preview.2.25163.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/Microsoft.Extensions.Caching.Abstractions.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net8.0/_._",
+        "buildTransitive/netcoreapp2.0/Microsoft.Extensions.Caching.Abstractions.targets",
+        "lib/net10.0/Microsoft.Extensions.Caching.Abstractions.dll",
+        "lib/net10.0/Microsoft.Extensions.Caching.Abstractions.xml",
+        "lib/net462/Microsoft.Extensions.Caching.Abstractions.dll",
+        "lib/net462/Microsoft.Extensions.Caching.Abstractions.xml",
+        "lib/net8.0/Microsoft.Extensions.Caching.Abstractions.dll",
+        "lib/net8.0/Microsoft.Extensions.Caching.Abstractions.xml",
+        "lib/net9.0/Microsoft.Extensions.Caching.Abstractions.dll",
+        "lib/net9.0/Microsoft.Extensions.Caching.Abstractions.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Caching.Abstractions.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Caching.Abstractions.xml",
+        "microsoft.extensions.caching.abstractions.10.0.0-preview.2.25163.2.nupkg.sha512",
+        "microsoft.extensions.caching.abstractions.nuspec",
+        "useSharedDesignerContext.txt"
       ]
     },
     "Microsoft.Extensions.Configuration/10.0.0-preview.2.25163.2": {
@@ -346,6 +395,7 @@
   "projectFileDependencyGroups": {
     "net9.0": [
       "Dapper >= 2.1.66",
+      "Microsoft.Extensions.Caching.Abstractions >= 10.0.0-preview.2.25163.2",
       "Microsoft.Extensions.Configuration >= 10.0.0-preview.2.25163.2",
       "System.Data.SqlClient >= 4.9.0"
     ]
@@ -403,6 +453,10 @@
           "Dapper": {
             "target": "Package",
             "version": "[2.1.66, )"
+          },
+          "Microsoft.Extensions.Caching.Abstractions": {
+            "target": "Package",
+            "version": "[10.0.0-preview.2.25163.2, )"
           },
           "Microsoft.Extensions.Configuration": {
             "target": "Package",

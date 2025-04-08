@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TreeGrouping.Web")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f078a53b7cc05ee37ef828cc3b66c288a8498165")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6e58a6816ff81e231d4eff4d3bd133d1f8c28a22")]
 [assembly: System.Reflection.AssemblyProductAttribute("TreeGrouping.Web")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TreeGrouping.Web")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

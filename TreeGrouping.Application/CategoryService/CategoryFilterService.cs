@@ -6,14 +6,17 @@ public class CategoryFilterService
 {
     public List<CategoryModel> FilterCategoriesByName(List<CategoryModel> categories, string name)
     {
-        // Если фильтр не задан — возвращаем все категории
+        // Если фильтр не задан — возвращаем все категории, отсортированные по алфавиту
         if (string.IsNullOrEmpty(name))
         {
             foreach (var category in categories)
             {
                 category.IsFiltred = false;
             }
-            return categories;
+
+            return categories
+                .OrderBy(c => c.Name, StringComparer.OrdinalIgnoreCase)
+                .ToList();
         }
 
         // Фильтруем категории по названию
@@ -49,6 +52,10 @@ public class CategoryFilterService
             category.IsFiltred = true;
         }
 
-        return allRelevantCategories.ToList();
+        // Возвращаем отсортированный результат
+        return allRelevantCategories
+            .OrderBy(c => c.Name, StringComparer.OrdinalIgnoreCase)
+            .ToList();
     }
+
 }

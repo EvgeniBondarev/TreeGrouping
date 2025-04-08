@@ -1,6 +1,8 @@
 ﻿@{
     ViewData["Title"] = "Категории";
 }
+@Html.AntiForgeryToken()
+
 
 <div class="container">
     <!-- Панель действий -->
@@ -38,6 +40,16 @@
                 <p>Загрузка...</p>
             </div>
         </div>
+        
+        <!-- Колонка Метод вызова и фильтрации -->
+        <div class="col-md-4 tree-container" id="method-column">
+            <h4 class="text-center">IC</h4>
+            <input type="text" id="method-filter" class="form-control filter-input" placeholder="Фильтр методов">
+            <div id="method-category-container" class="tree-scroll">
+                <p>Загрузка...</p>
+            </div>
+        </div>
+
 
         <div class="col-md-4 tree-container" id="cattree-column">
             <h4 class="text-center">CatTree</h4>
@@ -57,10 +69,36 @@
         <div class="settings-options">
             <button onclick="toggleColumn('volna-column')">Скрыть/показать Volna</button>
             <button onclick="toggleColumn('ozon-column')">Скрыть/показать Ozon</button>
+            <button onclick="toggleColumn('method-column')">Скрыть/показать Метод вызова и фильтрации</button>
             <button onclick="toggleColumn('cattree-column')">Скрыть/показать CatTree</button>
         </div>
     </div>
 </div>
+
+<script>
+    function unlinkCategory(id) {
+        if (confirm("Вы уверены, что хотите отвязать категорию?")) {
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+            fetch(`/Category/Unlink?id=${id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': token
+                },
+                body: JSON.stringify({}) // даже пустой нужен при Content-Type: application/json
+            })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert("Ошибка при отвязке.");
+                    }
+                });
+        }
+    }
+</script>
+
 
 <!-- jQuery для AJAX -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -138,7 +176,9 @@
             volnaColumnHidden: document.getElementById('volna-column').classList.contains('hidden'),
             ozonColumnHidden: document.getElementById('ozon-column').classList.contains('hidden'),
             cattreeColumnHidden: document.getElementById('cattree-column').classList.contains('hidden'),
-            columnsOrder: Array.from(document.getElementById('columns-container').children).map(col => col.id)
+            columnsOrder: Array.from(document.getElementById('columns-container').children).map(col => col.id),
+            methodColumnHidden: document.getElementById('method-column').classList.contains('hidden'),
+
         };
 
         sessionStorage.setItem('columnsState', JSON.stringify(columnsState));
@@ -152,6 +192,7 @@
             if (columnsState.volnaColumnHidden) document.getElementById('volna-column').classList.add('hidden');
             if (columnsState.ozonColumnHidden) document.getElementById('ozon-column').classList.add('hidden');
             if (columnsState.cattreeColumnHidden) document.getElementById('cattree-column').classList.add('hidden');
+            if (columnsState.methodColumnHidden) document.getElementById('method-column').classList.add('hidden');
 
             // Восстанавливаем порядок колонок
             const container = document.getElementById('columns-container');
@@ -191,6 +232,8 @@
         loadCategories("ozon-category-container", '@Url.Action("GetOzonCategories", "Category")', '');
         loadCategories("ct-category-container", '@Url.Action("GetCtCategories", "Category")', '');
         loadCategories("cattree-category-container", '@Url.Action("GetCatTreeCategories", "Category")', '');
+        loadCategories("method-category-container", '@Url.Action("GetICGroupsCategories", "Category")', '');
+
 
         // Фильтрация при вводе текста
         $(".filter-input").on("input", function () {
@@ -206,7 +249,11 @@
             } else if (id === "cattree-filter") {  // Обработчик фильтра для нового дерева
                 loadCategories("cattree-category-container", '@Url.Action("GetCatTreeCategories", "Category")', value);
             }
-        });
+            else if (id === "method-filter") {
+                loadCategories("method-category-container", '@Url.Action("GetICGroupsCategories", "Category")', value);
+            }
+
+    });
     });
 
 </script>

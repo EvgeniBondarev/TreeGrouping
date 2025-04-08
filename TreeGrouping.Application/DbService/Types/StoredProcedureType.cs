@@ -5,6 +5,7 @@ public enum StoredProcedureType
     GetVolnaCategories,
     GetOzonCategories,
     GetCtCategories,
+    GetICGroups,
     SearchVolnaCategoryByName,
     SearchOzonCategoryByName,
     SearchCtCategoryByName,
@@ -14,5 +15,6 @@ public enum StoredProcedureType
     AddCategoryLink,
     DeleteCategoryLink,
     GetCatTreeCategories,
-    SearchCatTreeCategoryById
+    SearchCatTreeCategoryById,
+    SearchICGroupById 
 }

@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "a6Ur6yxo4e8=",
+  "dgSpecHash": "BUF9pcNBeK0=",
   "success": true,
   "projectFilePath": "D:\\.NETProject\\TreeGrouping\\TreeGrouping.Web\\TreeGrouping.Web.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\evgen\\.nuget\\packages\\dapper\\2.1.66\\dapper.2.1.66.nupkg.sha512",
+    "C:\\Users\\evgen\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\10.0.0-preview.2.25163.2\\microsoft.extensions.caching.abstractions.10.0.0-preview.2.25163.2.nupkg.sha512",
     "C:\\Users\\evgen\\.nuget\\packages\\microsoft.extensions.configuration\\10.0.0-preview.2.25163.2\\microsoft.extensions.configuration.10.0.0-preview.2.25163.2.nupkg.sha512",
     "C:\\Users\\evgen\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\10.0.0-preview.2.25163.2\\microsoft.extensions.configuration.abstractions.10.0.0-preview.2.25163.2.nupkg.sha512",
     "C:\\Users\\evgen\\.nuget\\packages\\microsoft.extensions.primitives\\10.0.0-preview.2.25163.2\\microsoft.extensions.primitives.10.0.0-preview.2.25163.2.nupkg.sha512",

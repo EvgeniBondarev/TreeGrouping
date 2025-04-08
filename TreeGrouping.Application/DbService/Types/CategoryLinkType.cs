@@ -4,5 +4,6 @@ public enum CategoryLinkType
 {
     Ozon,
     Volna,
-    CatTree
+    CatTree,
+    IC 
 }

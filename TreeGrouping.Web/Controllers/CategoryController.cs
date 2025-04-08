@@ -84,6 +84,17 @@ public class CategoryController : Controller
         var model = Tuple.Create(tree, "CatTree");
         return PartialView("_CategoryTree", model);
     }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetICGroupsCategories(string name = null)
+    {
+        var categories = await GetCategoriesWithCache("ic_groups", StoredProcedureType.GetICGroups, name);
+        var tree = _treeService.BuildTree(categories);
+        var model = Tuple.Create(tree, "IC");
+
+        return PartialView("_CategoryTree", model);
+    }
+
 
     [HttpPost]
     public async Task<IActionResult> LinkCategories([FromBody] Dictionary<string, int> selectedCategories)
@@ -133,4 +144,13 @@ public class CategoryController : Controller
                 { success = false, message = "Ошибка при связывании категорий!", error = ex.Message });
         }
     }
+    
+    [HttpPost]
+    [ValidateAntiForgeryToken] // убираем для теста
+    public async Task<IActionResult> Unlink(int id)
+    {
+        await _dbService.ExecuteStoredProcedureAsync(StoredProcedureType.DeleteCategoryLink, id);
+        return Ok();
+    }
+
 }

@@ -8,23 +8,42 @@
 <ul>
     @foreach (var category in categories)
     {
+        string linkClass = !string.IsNullOrWhiteSpace(category.ParentName) ? category.ParentName : treeType;
         <li>
             @if (category.Children.Any())
             {
                 <details @(category.IsFiltred ? "open" : "")>
                     <summary>
-                        <a href="#" class="category-link" data-id="@category.Id" data-tree="@treeType" onclick="toggleCategory(event, this)">
-                            @category.Name <strong style="font-size: 0.8em;">@category.ParentName</strong>
+                        <a href="#" class="category-link @linkClass" data-id="@category.Id" data-tree="@treeType" onclick="toggleCategory(event, this)">
+                            @category.Name
+                            <strong style="font-size: 0.8em;">@category.ParentName</strong>
                         </a>
+                        @if (category.LinkId != 0)
+                        {
+                            <a href="javascript:void(0);"
+                               onclick="unlinkCategory(@category.LinkId)"
+                               style="color: red; margin-left: 10px; font-size: 0.8em;">
+                                отвязать
+                            </a>
+                        }
                     </summary>
                     <partial name="_CategoryTree" model="Tuple.Create(category.Children, treeType)" />
                 </details>
             }
             else
             {
-                <a href="#" class="category-link" data-id="@category.Id" data-tree="@treeType" onclick="toggleCategory(event, this)">
+                <a href="#" class="category-link @linkClass" data-id="@category.Id" data-tree="@treeType" onclick="toggleCategory(event, this)">
                     @category.Name
+                    <strong style="font-size: 0.8em;">@category.ParentName</strong>
                 </a>
+                @if (category.LinkId != 0)
+                {
+                    <a href="javascript:void(0);"
+                       onclick="unlinkCategory(@category.LinkId)"
+                       style="color: red; margin-left: 10px; font-size: 0.8em;">
+                        отвязать
+                    </a>
+                }
             }
         </li>
     }

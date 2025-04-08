@@ -9,6 +9,7 @@ public static class StoredProcedureTypeExtensions
             StoredProcedureType.GetVolnaCategories => "GetVolnaCategories",
             StoredProcedureType.GetOzonCategories => "GetOzonCategories",
             StoredProcedureType.GetCtCategories => "GetCtCategories",
+            StoredProcedureType.GetICGroups => "GetICGroups",
             StoredProcedureType.SearchVolnaCategoryByName => "SearchVolnaCategoryByName",
             StoredProcedureType.SearchOzonCategoryByName => "SearchOzonCategoryByName",
             StoredProcedureType.SearchCtCategoryByName => "SearchCtCategoryByName",
@@ -19,6 +20,7 @@ public static class StoredProcedureTypeExtensions
             StoredProcedureType.DeleteCategoryLink => "DeleteCategoryLinkById",
             StoredProcedureType.GetCatTreeCategories => "GetCatTreeCategories",  
             StoredProcedureType.SearchCatTreeCategoryById => "SearchCatTreeCategoryById",
+            StoredProcedureType.SearchICGroupById => "SearchICGroupById",
             _ => throw new ArgumentException("Unknown procedure type")
         };
     }
@@ -66,6 +68,12 @@ public static class StoredProcedureTypeExtensions
                     if (parameter is int catTreeId)
                     {
                         paramDict["categoryId"] = catTreeId;
+                    }
+                    break;
+                case StoredProcedureType.SearchICGroupById:
+                    if (parameter is int groupId)
+                    {
+                        paramDict["groupId"] = groupId; 
                     }
                     break;
             }

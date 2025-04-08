@@ -10,4 +10,5 @@ public class CategoryModel
     public List<CategoryModel> Children { get; set; } = new();
     public string? ParentName { get; set; }
     public bool IsFiltred { get; set; } = false;
+    public int LinkId { get; set; } 
 }
