@@ -338,19 +338,21 @@
     // Функция для показа окна подтверждения
     function showConfirmationDialog(selectedData) {
         let button = document.getElementById("confirmLinkButton");
-
-        // Проверка наличия элемента с ключом 'CT' в selectedData
-        if ("CT" in selectedData) {
             button.style.display = "block"; // Показываем кнопку
-        } else {
-            button.style.display = "none"; // Скрываем кнопку
-        }
     }
 
     // Функция для отправки данных в контроллер
     function sendCategoriesToServer() {
         let selectedData = JSON.parse(sessionStorage.getItem("selectedCategories")) || {};
-        fetch('/Category/LinkCategories', {
+        let endpoint = ""
+        // Проверка наличия элемента с ключом 'CT' в selectedData
+        if ("CT" in selectedData) {
+            endpoint = '/Category/LinkCategories'
+        } else {
+            endpoint = '/Category/CreateUnifiedCategory'
+        }
+        
+        fetch(endpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

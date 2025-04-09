@@ -257,5 +257,24 @@ public class CategoryController : Controller
         await _dbService.ExecuteStoredProcedureAsync(StoredProcedureType.DeleteCategoryLink, id);
         return Ok();
     }
+    
+    [HttpPost]
+    public async Task<IActionResult> CreateUnifiedCategory([FromBody] Dictionary<string, string> categoryNames)
+    {
+        int? ozonId = TryGetIntValue(categoryNames, "Ozon");
+        int? volnaId = TryGetIntValue(categoryNames, "Volna");
+        int? icId = TryGetIntValue(categoryNames, "IC");
+        await _dbService.ExecuteStoredProcedureAsync(StoredProcedureType.InsertUnifiedCategoryIfNotExists, (ozonId, volnaId, icId));
+
+        return Ok(new { ozonId, volnaId, icId });
+    }
+
+    private int? TryGetIntValue(Dictionary<string, string> dict, string key)
+    {
+        if (dict.TryGetValue(key, out var value) && int.TryParse(value, out var result))
+            return result;
+
+        return null;
+    }
 
 }

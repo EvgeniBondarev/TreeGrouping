@@ -21,6 +21,7 @@ public static class StoredProcedureTypeExtensions
             StoredProcedureType.GetCatTreeCategories => "GetCatTreeCategories",  
             StoredProcedureType.SearchCatTreeCategoryById => "SearchCatTreeCategoryById",
             StoredProcedureType.SearchICGroupById => "SearchICGroupById",
+            StoredProcedureType.InsertUnifiedCategoryIfNotExists => "sp_InsertUnifiedCategoryIfNotExists", 
             _ => throw new ArgumentException("Unknown procedure type")
         };
     }
@@ -76,6 +77,15 @@ public static class StoredProcedureTypeExtensions
                         paramDict["groupId"] = groupId; 
                     }
                     break;
+                case StoredProcedureType.InsertUnifiedCategoryIfNotExists:
+                    if (parameter is ValueTuple<int?, int?, int?> tuple)
+                    {
+                        paramDict["ozon_id"] = tuple.Item1;
+                        paramDict["volna_id"] = tuple.Item2;
+                        paramDict["ic_id"] = tuple.Item3;
+                    }
+                    break;
+
             }
         }
 
