@@ -97,6 +97,32 @@
                 });
         }
     }
+
+    // Клик по связанной категории
+    $(document).on("click", ".link-item", function () {
+        const type = $(this).data("type");
+        const id = $(this).data("id");
+
+        if (!type || !id) return;
+
+        switch (type) {
+            case "Ozon":
+                loadCategories("ozon-category-container", '@Url.Action("GetOzonCategoriesById", "Category")' + '?id=' + id);
+                break;
+            case "Volna":
+                loadCategories("volna-category-container", '@Url.Action("GetVolnaCategoriesById", "Category")' + '?id=' + id);
+                break;
+            case "Ct":
+                loadCategories("ct-category-container", '@Url.Action("GetCtCategoriesById", "Category")' + '?id=' + id);
+                break;
+            case "CatTree":
+                loadCategories("cattree-category-container", '@Url.Action("GetCatTreeCategoriesById", "Category")' + '?id=' + id);
+                break;
+            case "IC":
+                loadCategories("method-category-container", '@Url.Action("GetICGroupsCategoriesById", "Category")' + '?id=' + id);
+                break;
+        }
+    });
 </script>
 
 
@@ -228,11 +254,12 @@
 
     $(document).ready(function () {
         // Изначальная загрузка деревьев
-        loadCategories("volna-category-container", '@Url.Action("GetVolnaCategories", "Category")', '');
-        loadCategories("ozon-category-container", '@Url.Action("GetOzonCategories", "Category")', '');
-        loadCategories("ct-category-container", '@Url.Action("GetCtCategories", "Category")', '');
-        loadCategories("cattree-category-container", '@Url.Action("GetCatTreeCategories", "Category")', '');
-        loadCategories("method-category-container", '@Url.Action("GetICGroupsCategories", "Category")', '');
+        // Пример вызовов из JavaScript:
+        loadCategories("volna-category-container", '@Url.Action("UpdateVolnaCategories", "Category")', '');
+        loadCategories("ozon-category-container", '@Url.Action("UpdateOzonCategories", "Category")', '');
+        loadCategories("ct-category-container", '@Url.Action("UpdateCtCategories", "Category")', '');
+        loadCategories("cattree-category-container", '@Url.Action("UpdateCatTreeCategories", "Category")', '');
+        loadCategories("method-category-container", '@Url.Action("UpdateICGroupsCategories", "Category")', '')
 
 
         // Фильтрация при вводе текста

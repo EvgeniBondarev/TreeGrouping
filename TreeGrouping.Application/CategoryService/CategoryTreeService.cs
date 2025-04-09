@@ -21,42 +21,41 @@ public class CategoryTreeService
                     Children = c.Children.Any() ? c.Children : BuildBranch(c.Id),
                     IsFiltred = c.IsFiltred,
                     LinkId = c.LinkId,
+                    Links = c.Links,
                 }).ToList();
 
         return BuildBranch(null).Concat(BuildBranch(0)).ToList();
     }
 
 
-    public async Task<List<CategoryModel>> CategoryLinkToModel(IDatabaseService dbService,List<CategoryLinkModel> links)
+    public async Task<List<CategoryModel>> CategoryLinkToModel(IDatabaseService dbService, List<CategoryModel> tree, List<CategoryLinkModel> links)
     {
-        var tasks = links.Select(async link =>
+        foreach (var link in links)
         {
             if (!Enum.TryParse<CategoryLinkType>(link.LinkTypeName, true, out var linkType))
-            {
-                return Enumerable.Empty<CategoryModel>();
-            }
-
-            if (link.LinkTypeName == "IC")
-            {
-                
-            }
+                continue;
 
             var linkTreeTask = await dbService.ExecuteStoredProcedureAsync(linkType.GetProcedureType(), link.LinkCategoryId);
-            
-            var linkTree = BuildTree(linkTreeTask.ToList());
+            var linkCategory = linkTreeTask.FirstOrDefault(lc => lc.Id == link.LinkCategoryId);
 
-            if (linkTree.Any())
+            var treeItem = tree.FirstOrDefault(tr => tr.Id == link.CtCategoryId);
+            if (treeItem != null && linkCategory != null)
             {
-                var first = linkTree.First();
-                first.ParentId = link.CtCategoryId;
-                first.ParentName = link.LinkTypeName;
-                first.LinkId = link.Id;
+                bool linkExists = treeItem.Links.Any(l => l.Id == link.Id);
+                if (!linkExists)
+                {
+                    treeItem.Links.Add(new Link
+                    {
+                        CategoryLinkType = linkType,
+                        CategoryId = linkCategory.Id,
+                        Id = link.Id
+                    });
+                }
+
+                treeItem.ParentName ??= link.LinkTypeName; // только если ещё не установлено
             }
+        }
 
-            return linkTree;
-        });
-
-        var combinedLinkTrees = (await Task.WhenAll(tasks)).SelectMany(t => t).ToList();
-        return combinedLinkTrees;
+        return tree;
     }
 }

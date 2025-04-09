@@ -26,4 +26,10 @@ public class CategoryCacheService
         }
         return categories;
     }
+    public async Task<List<CategoryModel>> UpdateCache(string cacheKey, StoredProcedureType storedProcedureType)
+    {
+        var updatedCategories = (await _dbService.ExecuteStoredProcedureAsync(storedProcedureType)).ToList();
+        _cache.Set(cacheKey, updatedCategories, _cacheDuration);
+        return updatedCategories;
+    }
 }

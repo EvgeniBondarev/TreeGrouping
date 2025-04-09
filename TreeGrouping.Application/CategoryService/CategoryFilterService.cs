@@ -57,5 +57,13 @@ public class CategoryFilterService
             .OrderBy(c => c.Name, StringComparer.OrdinalIgnoreCase)
             .ToList();
     }
+    
+    public List<CategoryModel> OrderCategoriesByName(List<CategoryModel> categories)
+    {
+        // Возвращаем отсортированный результат
+        return categories
+            .OrderBy(c => c.Name, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
 
 }

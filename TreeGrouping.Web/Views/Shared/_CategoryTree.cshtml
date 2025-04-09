@@ -4,46 +4,54 @@
     var categories = Model.Item1;
     var treeType = Model.Item2;
 }
-
 <ul>
     @foreach (var category in categories)
     {
-        string linkClass = !string.IsNullOrWhiteSpace(category.ParentName) ? category.ParentName : treeType;
+        string linkTypeClass =  treeType;
+        string linkClass = !string.IsNullOrWhiteSpace(category.ParentName) ? category.ParentName : "";
         <li>
             @if (category.Children.Any())
             {
                 <details @(category.IsFiltred ? "open" : "")>
-                    <summary>
-                        <a href="#" class="category-link @linkClass" data-id="@category.Id" data-tree="@treeType" onclick="toggleCategory(event, this)">
-                            @category.Name
-                            <strong style="font-size: 0.8em;">@category.ParentName</strong>
-                        </a>
-                        @if (category.LinkId != 0)
-                        {
-                            <a href="javascript:void(0);"
-                               onclick="unlinkCategory(@category.LinkId)"
-                               style="color: red; margin-left: 10px; font-size: 0.8em;">
-                                отвязать
-                            </a>
-                        }
+                    <summary class="category-link @linkTypeClass">
+                        @category.Name
                     </summary>
+
                     <partial name="_CategoryTree" model="Tuple.Create(category.Children, treeType)" />
                 </details>
             }
             else
             {
-                <a href="#" class="category-link @linkClass" data-id="@category.Id" data-tree="@treeType" onclick="toggleCategory(event, this)">
-                    @category.Name
-                    <strong style="font-size: 0.8em;">@category.ParentName</strong>
-                </a>
-                @if (category.LinkId != 0)
-                {
-                    <a href="javascript:void(0);"
-                       onclick="unlinkCategory(@category.LinkId)"
-                       style="color: red; margin-left: 10px; font-size: 0.8em;">
-                        отвязать
-                    </a>
-                }
+                <div>
+                    <div>
+                        <a href="#" class="category-link  @linkTypeClass"
+                           data-id="@category.Id" data-tree="@treeType"
+                           onclick="toggleCategory(event, this)">
+                            @category.Name
+                        </a>
+
+                        <span style="font-size: 0.8em; color: gray;">
+                            [Id: @category.Id]
+                        </span>
+                    </div>
+
+                    <div style="font-size: 0.8em; color: gray; margin-top: 3px;">
+                        @foreach (var link in category.Links)
+                        {
+                            <div class="@link.CategoryLinkType link-item"
+                                 data-type="@link.CategoryLinkType"
+                                 data-id="@link.CategoryId">
+                                [@link.CategoryLinkType: @link.CategoryId]
+                                
+                                <a href="javascript:void(0);"
+                                   onclick="unlinkCategory(@link.Id)"
+                                   style="color: red; font-size: 0.8em;">
+                                    отвязать
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
             }
         </li>
     }

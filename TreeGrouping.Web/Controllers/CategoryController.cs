@@ -48,7 +48,28 @@ public class CategoryController : Controller
         return PartialView("_CategoryTree", model);
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetVolnaCategoriesById(int id)
+    {
+        var categories = await _dbService.ExecuteStoredProcedureAsync(StoredProcedureType.SearchVolnaCategoryById, id);
+        foreach (var category in categories)
+        {
+            category.IsFiltred = true;
+        }
+        var tree = _treeService.BuildTree(categories.ToList());
+        var model = Tuple.Create(tree, "Volna");
 
+        return PartialView("_CategoryTree", model);
+    }
+    [HttpGet]
+    public async Task<IActionResult> UpdateVolnaCategories()
+    {
+        var categories = await _cacheService.UpdateCache("volna_categories", StoredProcedureType.GetVolnaCategories);
+        var tree = _treeService.BuildTree(categories);
+        var model = Tuple.Create(tree, "Volna");
+
+        return PartialView("_CategoryTree", model);
+    }
     
     [HttpGet]
     public async Task<IActionResult> GetOzonCategories(string name = null)
@@ -61,15 +82,60 @@ public class CategoryController : Controller
     }
     
     [HttpGet]
+    public async Task<IActionResult> GetOzonCategoriesById(int id)
+    {
+        var categories = await _dbService.ExecuteStoredProcedureAsync(StoredProcedureType.SearchOzonCategoryById, id);
+        foreach (var category in categories)
+        {
+            category.IsFiltred = true;
+        }
+        var tree = _treeService.BuildTree(categories.ToList());
+        var model = Tuple.Create(tree, "Ozon");
+
+        return PartialView("_CategoryTree", model);
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> UpdateOzonCategories()
+    {
+        var categories = await _cacheService.UpdateCache("ozon_categories", StoredProcedureType.GetOzonCategories);
+        var tree = _treeService.BuildTree(categories);
+        var model = Tuple.Create(tree, "Ozon");
+
+        return PartialView("_CategoryTree", model);
+    }
+    
+    [HttpGet]
     public async Task<IActionResult> GetCtCategories(string name = null)
     {
         var categories = await _cacheService.GetCategoriesFromCache("ct_categories", StoredProcedureType.GetCtCategories);
-        var newCategories = categories.ToList();
         var links = await _dbService.GetAllCategoryLinksAsync();
-        var categoryLinkToModels = await _treeService.CategoryLinkToModel(_dbService, links.ToList()); 
-        newCategories.AddRange(categoryLinkToModels);
+        var newCategories = await _treeService.CategoryLinkToModel(_dbService, categories, links.ToList()); ;
         newCategories = _filterService.FilterCategoriesByName(newCategories, name);
         var tree = _treeService.BuildTree(newCategories);
+        var model = Tuple.Create(tree, "CT");
+
+        return PartialView("_CategoryTree", model);
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> UpdateCtCategories()
+    {
+        var categories = await _cacheService.UpdateCache("ct_categories", StoredProcedureType.GetCtCategories);
+        var links = await _dbService.GetAllCategoryLinksAsync();
+        var newCategories = await _treeService.CategoryLinkToModel(_dbService, categories, links.ToList()); ;
+        newCategories = _filterService.OrderCategoriesByName(newCategories);
+        var tree = _treeService.BuildTree(newCategories);
+        var model = Tuple.Create(tree, "CT");
+
+        return PartialView("_CategoryTree", model);
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetCtCategoriesById(int id)
+    {
+        var categories = await _dbService.ExecuteStoredProcedureAsync(StoredProcedureType.SearchCtCategoryById, id);
+        var tree = _treeService.BuildTree(categories.ToList());
         var model = Tuple.Create(tree, "CT");
 
         return PartialView("_CategoryTree", model);
@@ -86,6 +152,26 @@ public class CategoryController : Controller
     }
     
     [HttpGet]
+    public async Task<IActionResult> GetCatTreeCategoriesById(int id)
+    {
+        var categories = await _dbService.ExecuteStoredProcedureAsync(StoredProcedureType.SearchCatTreeCategoryById, id);
+        var tree = _treeService.BuildTree(categories.ToList());
+        var model = Tuple.Create(tree, "CatTree");
+
+        return PartialView("_CategoryTree", model);
+    }
+    [HttpGet]
+    public async Task<IActionResult> UpdateCatTreeCategories()
+    {
+        var categories = await _cacheService.UpdateCache("cat_tree_categories", StoredProcedureType.GetCatTreeCategories);
+        var tree = _treeService.BuildTree(categories);
+        var model = Tuple.Create(tree, "CatTree");
+
+        return PartialView("_CategoryTree", model);
+    }
+
+    
+    [HttpGet]
     public async Task<IActionResult> GetICGroupsCategories(string name = null)
     {
         var categories = await GetCategoriesWithCache("ic_groups", StoredProcedureType.GetICGroups, name);
@@ -94,7 +180,26 @@ public class CategoryController : Controller
 
         return PartialView("_CategoryTree", model);
     }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetICGroupsCategoriesById(int id)
+    {
+        var categories = await _dbService.ExecuteStoredProcedureAsync(StoredProcedureType.SearchICGroupById, id);
+        var tree = _treeService.BuildTree(categories.ToList());
+        var model = Tuple.Create(tree, "IC");
 
+        return PartialView("_CategoryTree", model);
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> UpdateICGroupsCategories()
+    {
+        var categories = await _cacheService.UpdateCache("ic_groups", StoredProcedureType.GetICGroups);
+        var tree = _treeService.BuildTree(categories);
+        var model = Tuple.Create(tree, "IC");
+
+        return PartialView("_CategoryTree", model);
+    }
 
     [HttpPost]
     public async Task<IActionResult> LinkCategories([FromBody] Dictionary<string, int> selectedCategories)
