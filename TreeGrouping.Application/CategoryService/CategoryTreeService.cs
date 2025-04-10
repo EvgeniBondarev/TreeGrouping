@@ -22,6 +22,8 @@ public class CategoryTreeService
                     IsFiltred = c.IsFiltred,
                     LinkId = c.LinkId,
                     Links = c.Links,
+                    CatChar  = c.CatChar,
+                    
                 }).ToList();
 
         return BuildBranch(null).Concat(BuildBranch(0)).ToList();

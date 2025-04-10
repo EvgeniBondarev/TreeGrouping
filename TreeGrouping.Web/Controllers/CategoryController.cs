@@ -251,7 +251,7 @@ public class CategoryController : Controller
     }
     
     [HttpPost]
-    [ValidateAntiForgeryToken] // убираем для теста
+    [ValidateAntiForgeryToken] 
     public async Task<IActionResult> Unlink(int id)
     {
         await _dbService.ExecuteStoredProcedureAsync(StoredProcedureType.DeleteCategoryLink, id);
@@ -267,6 +267,29 @@ public class CategoryController : Controller
         await _dbService.ExecuteStoredProcedureAsync(StoredProcedureType.InsertUnifiedCategoryIfNotExists, (ozonId, volnaId, icId));
 
         return Ok(new { ozonId, volnaId, icId });
+    }
+    
+    [HttpPost]
+    [ValidateAntiForgeryToken] 
+    public async Task<IActionResult> DeleteUnifiedCategoryByIcId(int id)
+    {
+        try
+        {
+            await _dbService.ExecuteStoredProcedureAsync(
+                StoredProcedureType.DeleteUnifiedCategoryByIcId, 
+                id
+            );
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new 
+            { 
+                success = false, 
+                message = "Ошибка при удалении категории", 
+                error = ex.Message 
+            });
+        }
     }
 
     private int? TryGetIntValue(Dictionary<string, string> dict, string key)

@@ -8,7 +8,7 @@
     @foreach (var category in categories)
     {
         string linkTypeClass =  treeType;
-        string linkClass = !string.IsNullOrWhiteSpace(category.ParentName) ? category.ParentName : "";
+        
         <li>
             @if (category.Children.Any())
             {
@@ -30,8 +30,8 @@
                             @category.Name
                         </a>
 
-                        <span style="font-size: 0.8em; color: gray;">
-                            [Id: @category.Id]
+                        <span style="font-size: 0.8em; color: gray;" title="@category.Id">
+                            [Id: @category.DisplayId]
                         </span>
                     </div>
 
@@ -49,6 +49,14 @@
                                     отвязать
                                 </a>
                             </div>
+                        }
+                        @if (category.HasBracketsInName)
+                        {
+                            <a href="javascript:void(0);"
+                               onclick="unlinkCiCategory(@category.Id)"
+                               style="color: red; font-size: 0.8em;">
+                                отвязать
+                            </a>
                         }
                     </div>
                 </div>

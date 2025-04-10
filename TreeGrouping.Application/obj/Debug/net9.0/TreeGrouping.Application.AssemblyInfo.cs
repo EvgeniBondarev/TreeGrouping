@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TreeGrouping.Application")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+579b12a0505bd173cfbd5f11e6aea69e6c303ce7")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a259302453582402ff2b9e225af387c16431bb89")]
 [assembly: System.Reflection.AssemblyProductAttribute("TreeGrouping.Application")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TreeGrouping.Application")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

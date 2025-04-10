@@ -22,6 +22,7 @@ public static class StoredProcedureTypeExtensions
             StoredProcedureType.SearchCatTreeCategoryById => "SearchCatTreeCategoryById",
             StoredProcedureType.SearchICGroupById => "SearchICGroupById",
             StoredProcedureType.InsertUnifiedCategoryIfNotExists => "sp_InsertUnifiedCategoryIfNotExists", 
+            StoredProcedureType.DeleteUnifiedCategoryByIcId => "DeleteUnifiedCategoryByIcId",
             _ => throw new ArgumentException("Unknown procedure type")
         };
     }
@@ -83,6 +84,12 @@ public static class StoredProcedureTypeExtensions
                         paramDict["ozon_id"] = tuple.Item1;
                         paramDict["volna_id"] = tuple.Item2;
                         paramDict["ic_id"] = tuple.Item3;
+                    }
+                    break;
+                case StoredProcedureType.DeleteUnifiedCategoryByIcId: 
+                    if (parameter is int icId)
+                    {
+                        paramDict["IcId"] = icId;
                     }
                     break;
 

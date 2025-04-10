@@ -86,7 +86,29 @@
                     'Content-Type': 'application/json',
                     'RequestVerificationToken': token
                 },
-                body: JSON.stringify({}) // даже пустой нужен при Content-Type: application/json
+                body: JSON.stringify({})
+            })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert("Ошибка при отвязке.");
+                    }
+                });
+        }
+    }
+    
+    function unlinkCiCategory(id) {
+        if (confirm("Вы уверены, что хотите отвязать категорию?")) {
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+            fetch(`/Category/DeleteUnifiedCategoryByIcId?id=${id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': token
+                },
+                body: JSON.stringify({})
             })
                 .then(response => {
                     if (response.ok) {
