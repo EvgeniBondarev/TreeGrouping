@@ -23,6 +23,7 @@ public static class StoredProcedureTypeExtensions
             StoredProcedureType.SearchICGroupById => "SearchICGroupById",
             StoredProcedureType.InsertUnifiedCategoryIfNotExists => "sp_InsertUnifiedCategoryIfNotExists", 
             StoredProcedureType.DeleteUnifiedCategoryByIcId => "DeleteUnifiedCategoryByIcId",
+            StoredProcedureType.AddCategoryTranslations => "AddCategoryTranslations", 
             _ => throw new ArgumentException("Unknown procedure type")
         };
     }
@@ -90,6 +91,14 @@ public static class StoredProcedureTypeExtensions
                     if (parameter is int icId)
                     {
                         paramDict["IcId"] = icId;
+                    }
+                    break;
+                case StoredProcedureType.AddCategoryTranslations:
+                    if (parameter is (int categoryId, string linkType, string translation))
+                    {
+                        paramDict["category_id"] = categoryId;
+                        paramDict["link_type_name"] = linkType;
+                        paramDict["translation"] = translation;
                     }
                     break;
 

@@ -18,5 +18,6 @@ public enum StoredProcedureType
     SearchCatTreeCategoryById,
     SearchICGroupById,
     InsertUnifiedCategoryIfNotExists,
-    DeleteUnifiedCategoryByIcId
+    DeleteUnifiedCategoryByIcId,
+    AddCategoryTranslations
 }

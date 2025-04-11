@@ -9,6 +9,10 @@
     <div class="action-panel">
         <a href="#" class="action-link" id="clear-selection">Очистить выбор</a>
         <button id="confirmLinkButton" class="action-button" onclick="sendCategoriesToServer()">Связать категории</button>
+        <div class="translation-section" id="translation-section-id">
+            <input type="text" id="translationInput" class="translation-input" placeholder="Введите перевод">
+            <button id="sendTranslationButton" class="action-button" onclick="sendTranslationToServer()">Добавить перевод</button>
+        </div>
         <a href="#" class="action-link" id="settings-button" onclick="showSettingsModal()">Настройки отображения</a>
     </div>
 
@@ -98,27 +102,6 @@
         }
     }
     
-    function unlinkCiCategory(id) {
-        if (confirm("Вы уверены, что хотите отвязать категорию?")) {
-            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
-
-            fetch(`/Category/DeleteUnifiedCategoryByIcId?id=${id}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'RequestVerificationToken': token
-                },
-                body: JSON.stringify({})
-            })
-                .then(response => {
-                    if (response.ok) {
-                        location.reload();
-                    } else {
-                        alert("Ошибка при отвязке.");
-                    }
-                });
-        }
-    }
 
     // Клик по связанной категории
     $(document).on("click", ".link-item", function () {
@@ -337,6 +320,10 @@
                 let button = document.getElementById("confirmLinkButton");
                 button.style.display = "none"; // Скрываем кнопку
             }
+            if (Object.keys(selectedData).length === 0) {
+                let translation_section = document.getElementById("translation-section-id")
+                translation_section.style.display = "none";
+            }
         } else {
             // Сбрасываем цвет у старого элемента (если он был выделен)
             document.querySelectorAll(`.category-link[data-tree="${tree}"]`).forEach(link => {
@@ -352,15 +339,63 @@
 
         // Проверяем, если выбрано ровно 3 категории - показываем окно
         if (Object.keys(selectedData).length > 1) {
-            showConfirmationDialog(selectedData);
+            showConfirmationDialog();
+        }
+        if (Object.keys(selectedData).length >= 1) {
+            showSection();
         }
         console.log(sessionStorage.getItem("selectedCategories"));
     }
 
     // Функция для показа окна подтверждения
-    function showConfirmationDialog(selectedData) {
+    function showConfirmationDialog() {
         let button = document.getElementById("confirmLinkButton");
-            button.style.display = "block"; // Показываем кнопку
+        button.style.display = "block"; // Показываем кнопку
+    }
+    function showSection() {
+        let translation_section = document.getElementById("translation-section-id");
+        translation_section.style.display = "flex";
+    }
+
+    function sendTranslationToServer() {
+        const translationText = document.getElementById('translationInput').value.trim();
+
+        let selectedData = JSON.parse(sessionStorage.getItem("selectedCategories")) || {};
+
+        if (Object.keys(selectedData).length === 0) {
+            alert('Пожалуйста, сначала выберите категории');
+            return;
+        }
+
+        const requestData = {
+            CategoryNames: selectedData,
+            Translation: translationText
+        };
+
+        fetch('/Category/CreateCategoryTranslation', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw new Error(err.error || 'Ошибка сервера'); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    alert(translationText ? "Перевод сохранен" : "Перевод удален");
+                    document.getElementById('translationInput').value = '';
+                    location.reload();
+                }
+            })
+            .catch(error => {
+                console.error("Ошибка:", error);
+                alert("Ошибка: " + error.message);
+            });
     }
 
     // Функция для отправки данных в контроллер
@@ -386,7 +421,7 @@
                 console.log("Ответ сервера:", data);
                 alert("Категории успешно связаны!");
                 sessionStorage.removeItem("selectedCategories"); // Очищаем после отправки
-                location.reload(); // Обновляем страницу
+                location.reload();
             })
             .catch(error => {
                 console.error("Ошибка:", error);

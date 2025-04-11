@@ -31,7 +31,7 @@
                         </a>
 
                         <span style="font-size: 0.8em; color: gray;" title="@category.Id">
-                            [Id: @category.DisplayId]
+                            [Id: @category.DisplayId] @category.Translation
                         </span>
                     </div>
 
@@ -49,14 +49,6 @@
                                     отвязать
                                 </a>
                             </div>
-                        }
-                        @if (category.HasBracketsInName)
-                        {
-                            <a href="javascript:void(0);"
-                               onclick="unlinkCiCategory(@category.Id)"
-                               style="color: red; font-size: 0.8em;">
-                                отвязать
-                            </a>
                         }
                     </div>
                 </div>

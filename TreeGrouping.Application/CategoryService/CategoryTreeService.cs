@@ -23,7 +23,7 @@ public class CategoryTreeService
                     LinkId = c.LinkId,
                     Links = c.Links,
                     CatChar  = c.CatChar,
-                    
+                    Translation = c.Translation,
                 }).ToList();
 
         return BuildBranch(null).Concat(BuildBranch(0)).ToList();
