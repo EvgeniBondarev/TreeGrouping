@@ -1,4 +1,5 @@
-﻿@model Tuple<List<TreeGrouping.Application.DbService.Models.CategoryModel>, string>
+﻿@using System.Web
+@model Tuple<List<TreeGrouping.Application.DbService.Models.CategoryModel>, string>
 
 @{
     var categories = Model.Item1;
@@ -24,12 +25,15 @@
             {
                 <div>
                     <div>
-                        <a href="#" class="category-link  @linkTypeClass"
-                           data-id="@category.Id" data-tree="@treeType"
-                           onclick="toggleCategory(event, this)">
+                        <a href="#" class="category-link @linkTypeClass"
+                           data-id="@category.Id" 
+                           data-tree="@treeType"
+                           data-name="@HttpUtility.HtmlEncode(category.Name)"
+                           onclick="handleLeftClick(event, this)"
+                           oncontextmenu="handleRightClick(event, this)">
                             @category.Name
                         </a>
-
+                        
                         <span style="font-size: 0.8em; color: gray;" title="@category.Id">
                             [Id: @category.DisplayId] @category.Translation
                         </span>

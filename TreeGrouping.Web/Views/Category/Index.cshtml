@@ -14,6 +14,7 @@
             <button id="sendTranslationButton" class="action-button" onclick="sendTranslationToServer()">Добавить перевод</button>
         </div>
         <a href="#" class="action-link" id="settings-button" onclick="showSettingsModal()">Настройки отображения</a>
+        <a asp-action="Index" asp-controller="Tasks">Задачи</a>
     </div>
 
     <!-- Основной контейнер с колонками -->
@@ -304,7 +305,7 @@
         });
     });
 
-    function toggleCategory(event, element) {
+    function handleLeftClick(event, element) {
         event.preventDefault();
         let id = element.getAttribute("data-id");
         let tree = element.getAttribute("data-tree");
@@ -346,6 +347,14 @@
         }
         console.log(sessionStorage.getItem("selectedCategories"));
     }
+
+    function handleRightClick(event, element) {
+        event.preventDefault();
+        const encodedName = encodeURIComponent(element.dataset.name);
+        window.open(`/Cards?typeName=${encodedName}`, '_blank');
+        return false;
+    }
+
 
     // Функция для показа окна подтверждения
     function showConfirmationDialog() {
